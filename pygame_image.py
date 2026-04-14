@@ -19,26 +19,33 @@ def main():
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: return
-        kk_rct.move_ip(-1,0) #①
-        key_lst = pg.key.get_pressed()  # 練習10：すべてのキーの押下状態の取得
-    
-        if key_lst[pg.K_UP]:  # 上矢印キーが押されていたら
-            kk_rct.move_ip(0, -1)
-        if key_lst[pg.K_DOWN]:  # 下矢印キーが押されていたら
-            kk_rct.move_ip(0, +1)
-        if key_lst[pg.K_LEFT]:  # 左矢印キーが押されていたら
-            kk_rct.move_ip(-1, 0)
-        if key_lst[pg.K_RIGHT]:  # 右矢印キーが押されていたら
-            kk_rct.move_ip(+1, 0)
 
-        x = tmr%3200  # 練習5
-        screen.blit(bg_img, [-x, 0])  # 練習2
-        screen.blit(bg_img2, [-x+1600, 0])  # 練習7
-        screen.blit(bg_img, [-x+3200, 0])  # 練習9
-        screen.blit(kk_img, kk_rct)  # 練習4
+        
+        sum_mv = [-1, 0] 
+
+        key_lst = pg.key.get_pressed()
+        
+        if key_lst[pg.K_UP]:    # 上：y軸マイナス
+            sum_mv[1] -= 1
+        if key_lst[pg.K_DOWN]:  # 下：y軸プラス
+            sum_mv[1] += 1
+        if key_lst[pg.K_LEFT]:  # 左：x軸をさらにマイナス
+            sum_mv[0] -= 1
+        if key_lst[pg.K_RIGHT]: # 右：x軸に+2加算
+            sum_mv[0] += 2      # (-1 + 2 = +1) なので、右に自力で進める
+
+        # 2. move_ip はここで「1回だけ」呼び出す
+        kk_rct.move_ip(sum_mv)
+
+        # 以降、描画処理
+        x = tmr % 3200
+        screen.blit(bg_img, [-x, 0])
+        screen.blit(bg_img2, [-x+1600, 0])
+        screen.blit(bg_img, [-x+3200, 0])
+        screen.blit(kk_img, kk_rct)
         pg.display.update()
         tmr += 1        
-        clock.tick(200)  # 練習6
+        clock.tick(200)
 
 
 if __name__ == "__main__":
